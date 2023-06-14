@@ -1,5 +1,5 @@
-#define WINDOW_WIDTH 512
-#define WINDOW_HEIGHT 512
+#define WINDOW_WIDTH 750
+#define WINDOW_HEIGHT 750
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -20,6 +20,7 @@ int windowWidth = WINDOW_WIDTH, windowHeight = WINDOW_HEIGHT;
 void window_resize_callback(GLFWwindow*, int width, int height) {
     windowWidth = width;
     windowHeight = height;
+    glViewport(0, 0, width, height);
 }
 
 void key_function(GLFWwindow* window, int key, int, int action, int) {
@@ -59,8 +60,9 @@ int main()
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
 
-    if (glfwRawMouseMotionSupported())
+    if (glfwRawMouseMotionSupported()) {
         glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
+    }
 
     glfwSetWindowSizeCallback(window, window_resize_callback);
     glfwSetKeyCallback(window, key_function);
@@ -111,6 +113,9 @@ int main()
     float spinAmount = 0.2f;
 
     double lastFrame = 0.0;
+
+    bool f11PressState = false;
+    bool isFullscreen = false;
 
     glClearColor(0.15f, 0.15f, 0.15f, 1);
 
@@ -169,6 +174,25 @@ int main()
         if(glfwGetKey(window, GLFW_KEY_E)) {
             camera.position -= cameraUp * (float)(movementSpeed * deltaTime);
         }
+
+        if(glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
+            if(!f11PressState) {
+                f11PressState = true;
+                isFullscreen = !isFullscreen;
+
+                GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+                const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
+                const int width = isFullscreen ? mode->width : WINDOW_WIDTH;
+                const int height = isFullscreen ? mode->height : WINDOW_HEIGHT;
+
+                const int xPos = mode->width / 2 - WINDOW_WIDTH / 2;
+                const int yPos = mode->height / 2 - WINDOW_HEIGHT / 2;
+
+                glfwSetWindowMonitor(window, isFullscreen ? monitor : nullptr, xPos, yPos, width, height, mode->refreshRate);
+            }
+        } else if (glfwGetKey(window, GLFW_KEY_F11) == GLFW_RELEASE)
+            f11PressState = false;
 
         if(glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) &&
         glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT)) {

@@ -12,7 +12,6 @@ set(GLFW_INCLUDE_DIR "${GLFW_DIR}/include")
 set(GLFW_LIBRARY "${GLFW_DIR}/lib-mingw-w64/glfw3.dll")
 
 # GLEW
-
 set(GLEW_DIR "${CMAKE_CURRENT_LIST_DIR}/lib/glew")
 set(GLEW_INCLUDE_DIR "${GLEW_DIR}/include")
 set(GLEW_LIBRARY "${GLEW_DIR}/lib/Release/x64/glew32.lib")
@@ -23,5 +22,5 @@ include_directories(${GLEW_INCLUDE_DIR})
 
 find_package(OpenGL REQUIRED)
 
-add_executable(M4xEngine src/main.cpp src/IndexBuffer.cpp src/Renderer.cpp src/Shader.cpp src/SolarObject.cpp src/Texture.cpp src/VertexArray.cpp src/VertexBuffer.cpp vendor/imgui/imgui.cpp vendor/imgui/imgui_draw.cpp vendor/imgui/imgui_impl_glfw.cpp vendor/imgui/imgui_impl_opengl3.cpp vendor/imgui/imgui_impl_opengl3_loader.h vendor/imgui/imgui_internal.h vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp vendor/imgui/imstb_rectpack.h vendor/imgui/imstb_textedit.h vendor/imgui/imstb_truetype.h vendor/stb_image/stb_image.cpp)
+add_executable(M4xEngine src/main.cpp src/IndexBuffer.cpp src/Renderer.cpp src/Shader.cpp src/SolarObject.cpp src/Texture.cpp src/VertexArray.cpp src/VertexBuffer.cpp vendor/imgui/imgui.cpp vendor/imgui/imgui_draw.cpp vendor/imgui/imgui_impl_glfw.cpp vendor/imgui/imgui_impl_opengl3.cpp vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp vendor/stb_image/stb_image.cpp)
 target_link_libraries(M4xEngine ${GLEW_LIBRARY} ${GLFW_LIBRARY} ${OPENGL_gl_LIBRARY})
