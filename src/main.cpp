@@ -80,7 +80,7 @@ int main()
     std::cout << glGetString(GL_VERSION) << std::endl;
 
     ImGui::CreateContext();
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplGlfw_InitForOpenGL(window, false);
     ImGui_ImplOpenGL3_Init("#version 410");
     ImGui::StyleColorsDark();
 
@@ -126,10 +126,6 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
-
-        auto variable = Input::GetKeyState(KEY_A, INPUT_UP_FRAME);
-        if(variable)
-            std::cout << "YAY" << std::endl;
 
         camera.aspect = (float)windowWidth / (float)windowHeight;
 

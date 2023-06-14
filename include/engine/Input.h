@@ -105,5 +105,5 @@ public:
     static void Initialize(GLFWwindow* window);
 
     static void Update();
-    static bool GetKeyState(int key, int inputState);
+    static bool GetInputState(int input, int inputState);
 };
