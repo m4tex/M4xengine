@@ -4,8 +4,9 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
+#include <engine/Input.h>
 
-#include "Renderer.h"
+#include "rendering/Renderer.h"
 #include "glm/glm.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
@@ -21,11 +22,6 @@ void window_resize_callback(GLFWwindow*, int width, int height) {
     windowWidth = width;
     windowHeight = height;
     glViewport(0, 0, width, height);
-}
-
-void key_function(GLFWwindow* window, int key, int, int action, int) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
 }
 
 double lastX, lastY;
@@ -44,6 +40,7 @@ int main()
     if (!glfwInit())
         return -1;
 
+    //#region GLFW Window Creation
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -65,8 +62,8 @@ int main()
     }
 
     glfwSetWindowSizeCallback(window, window_resize_callback);
-    glfwSetKeyCallback(window, key_function);
     glfwSetCursorPosCallback (window, cursor_position_callback);
+    //#endregion
 
     if (glewInit() != GLEW_OK) {
         std::cout << "Failed to initiate Glew" << std::endl;
@@ -87,14 +84,12 @@ int main()
     ImGui_ImplOpenGL3_Init("#version 410");
     ImGui::StyleColorsDark();
 
-    Model planeModel = Model("../res/models/among.obj");
+    Model planeModel = Model("./models/among.obj");
 
     Material material;
-    Material material2;
+    Material gridMaterial;
 
-    material.shaderConfig.vertexSource = "../res/shaders/standard/basic_vertex.glsl";
-    material.shaderConfig.fragmentSource = "../res/shaders/standard/basic_lit_fragment.glsl";
-    material.shaderConfig.geometrySource = "../res/shaders/standard/basic_lit_geometry.glsl";
+    material.shaderConfig = ShaderConfig::BasicLit();
 
     Renderer renderer;
 
@@ -102,8 +97,12 @@ int main()
                     1.0f,0.001f, 1000000.0f };
 
     SolarObject stefan(material, planeModel);
+//    SolarObject grid(gridMaterial, )
+
     stefan.position.z = 15.0f;
     stefan.eulerAngles.y = 180.0f;
+
+    Input::Initialize(window);
 
     float movementSpeed = 25.0f;
     float mouseLookSensitivity = 15.0f;
@@ -127,6 +126,10 @@ int main()
         ImGui_ImplGlfw_NewFrame();
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+
+        auto variable = Input::GetKeyState(KEY_A, INPUT_UP_FRAME);
+        if(variable)
+            std::cout << "YAY" << std::endl;
 
         camera.aspect = (float)windowWidth / (float)windowHeight;
 
@@ -174,6 +177,8 @@ int main()
         if(glfwGetKey(window, GLFW_KEY_E)) {
             camera.position -= cameraUp * (float)(movementSpeed * deltaTime);
         }
+
+        if(glfwGetKey(window, GLFW_KEY_ESCAPE)) glfwSetWindowShouldClose(window, GLFW_TRUE);
 
         if(glfwGetKey(window, GLFW_KEY_F11) == GLFW_PRESS) {
             if(!f11PressState) {
@@ -257,6 +262,8 @@ int main()
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         //#endregion
+
+        Input::Update();
 
         glfwSwapBuffers(window);
     }

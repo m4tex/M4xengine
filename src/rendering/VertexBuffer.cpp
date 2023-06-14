@@ -2,8 +2,8 @@
 // Created by m4tex on 4/16/23.
 //
 
-#include "../include/VertexBuffer.h"
-#include "../include/Renderer.h"
+#include "rendering/VertexBuffer.h"
+#include "rendering/Renderer.h"
 #include <iostream>
 
 VertexBuffer::VertexBuffer(const void *data, unsigned int size) : m_RendererID(-1) {

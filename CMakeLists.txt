@@ -22,5 +22,7 @@ include_directories(${GLEW_INCLUDE_DIR})
 
 find_package(OpenGL REQUIRED)
 
-add_executable(M4xEngine src/main.cpp src/IndexBuffer.cpp src/Renderer.cpp src/Shader.cpp src/SolarObject.cpp src/Texture.cpp src/VertexArray.cpp src/VertexBuffer.cpp vendor/imgui/imgui.cpp vendor/imgui/imgui_draw.cpp vendor/imgui/imgui_impl_glfw.cpp vendor/imgui/imgui_impl_opengl3.cpp vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp vendor/stb_image/stb_image.cpp)
+add_executable(M4xEngine src/main.cpp src/rendering/IndexBuffer.cpp src/rendering/Renderer.cpp src/rendering/Shader.cpp src/rendering/SolarObject.cpp src/rendering/Texture.cpp src/rendering/VertexArray.cpp src/rendering/VertexBuffer.cpp vendor/imgui/imgui.cpp vendor/imgui/imgui_draw.cpp vendor/imgui/imgui_impl_glfw.cpp vendor/imgui/imgui_impl_opengl3.cpp vendor/imgui/imgui_tables.cpp vendor/imgui/imgui_widgets.cpp vendor/stb_image/stb_image.cpp src/engine/Input.cpp include/engine/Input.h)
 target_link_libraries(M4xEngine ${GLEW_LIBRARY} ${GLFW_LIBRARY} ${OPENGL_gl_LIBRARY})
+
+file(COPY res/ DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)

@@ -2,7 +2,7 @@
 // Created by m4tex on 4/17/23.
 //
 
-#include "../include/Shader.h"
+#include "rendering/Shader.h"
 
 #include <GL/glew.h>
 #include <fstream>

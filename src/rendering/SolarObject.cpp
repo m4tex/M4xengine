@@ -2,7 +2,7 @@
 // Created by m4tex on 5/19/23.
 //
 
-#include "SolarObject.h"
+#include "rendering/SolarObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 #include <fstream>

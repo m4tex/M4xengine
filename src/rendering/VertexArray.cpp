@@ -2,8 +2,8 @@
 // Created by m4tex on 4/16/23.
 //
 
-#include "../include/VertexArray.h"
-#include "../include/VertexBufferLayout.h"
+#include "rendering/VertexArray.h"
+#include "rendering/VertexBufferLayout.h"
 
 VertexArray::VertexArray() : m_RendererID(-1) {
     glGenVertexArrays(1, &m_RendererID);

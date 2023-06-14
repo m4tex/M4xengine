@@ -14,6 +14,21 @@ struct ShaderConfig {
     std::string vertexSource;
     std::string fragmentSource;
     std::string geometrySource;
+
+    static ShaderConfig BasicLit() {
+        return {
+              "./shaders/standard/basic_vertex.glsl",
+            "./shaders/standard/basic_lit_fragment.glsl",
+            "./shaders/standard/basic_lit_geometry.glsl"
+            };
+    }
+
+    static ShaderConfig BasicUnlit() {
+        return {
+                "./shaders/standard/unlit_vertex.glsl",
+                "./shaders/standard/basic_unlit_fragment.glsl"
+        };
+    }
 };
 
 class Shader {

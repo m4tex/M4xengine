@@ -2,8 +2,8 @@
 // Created by m4tex on 4/16/23.
 //
 
-#include "../include/IndexBuffer.h"
-#include "../include/Renderer.h"
+#include "rendering/IndexBuffer.h"
+#include "rendering/Renderer.h"
 
 IndexBuffer::IndexBuffer(const void *data, unsigned int count) : m_Count(count) {
     glGenBuffers(1, &m_RendererID);
