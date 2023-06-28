@@ -9,7 +9,9 @@
 #include <sstream>
 #include <iostream>
 
-Shader::Shader() : m_RendererID(0xffffff) {}
+//Shader::Shader() : m_RendererID(0xffffff) {
+//    std::cout << "Default Shader Construction" << std::endl;
+//}
 
 Shader::Shader(const std::string &vsPath, const std::string &fsPath)
 {

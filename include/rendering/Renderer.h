@@ -10,7 +10,7 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Debugging.h"
-#include "SolarObject.h"
+#include "M4xObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 struct Camera {
@@ -34,6 +34,11 @@ struct Camera {
 
 
 class Renderer {
+private:
+    Shader _gridShader;
+    Model _gridModel;
+    Camera* _camera;
+
 public:
     glm::vec3 lightDir = { 0.0f, 0.0f, 2.0f };
     glm::vec3 ambient = { .1f, .1f, .1f };
@@ -41,5 +46,9 @@ public:
 
 //    void Draw(Camera& camera, const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
 
-    void Draw(Camera& camera, SolarObject& object) const;
+    explicit Renderer(Camera& camera);
+
+    void SwitchCamera(Camera& camera);
+    void Draw(M4xObject& object) const;
+    void DrawScene(std::vector<std::unique_ptr<M4xObject>>& objects);
 };

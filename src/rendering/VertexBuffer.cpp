@@ -13,6 +13,7 @@ VertexBuffer::VertexBuffer(const void *data, unsigned int size) : m_RendererID(-
 }
 
 VertexBuffer::~VertexBuffer() {
+    std::cout << "Destructing VB" << std::endl;
     glDeleteBuffers(1, &m_RendererID);
 }
 

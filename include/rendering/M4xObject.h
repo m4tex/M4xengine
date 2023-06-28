@@ -19,11 +19,13 @@ struct LightData {
 };
 
 struct Model {
-    std::unique_ptr<VertexArray> va;
-    std::unique_ptr<IndexBuffer> ib;
-    std::unique_ptr<VertexBuffer> vb;
+    std::unique_ptr<VertexArray> va = nullptr;
+    std::unique_ptr<IndexBuffer> ib = nullptr;
+    std::unique_ptr<VertexBuffer> vb = nullptr;
 
-    Model (const std::string& filepath) {
+    Model() = default;
+    
+    explicit Model (const std::string& filepath) {
         LoadFromFile(filepath);
     }
 
@@ -41,23 +43,29 @@ struct Material {
     float shininess = 0.5f;
     Texture* texture = nullptr;
     ShaderConfig shaderConfig = defaultShaderConfig;
+    Shader* shader;
 };
 
-class SolarObject {
+class M4xObject {
 public:
+    std::string name;
+    std::string tag;
+
     glm::vec3 position;
     glm::vec3 eulerAngles;
     glm::vec3 scale;
 
-    SolarObject();
-    SolarObject(Material& material, Model& model);
+    M4xObject();
+    M4xObject(std::string name, glm::vec3 pos, glm::vec3 rot = { 0, 0, 0 });
+    M4xObject(Material& material, Model& model);
 
     void SetMaterial(Material& material);
     void SetModel(Model& model);
     void PrepareDraw(glm::mat4 perspective, glm::mat4 view, LightData lightData);
 
+//    virtual void Init();
+    virtual void Update();
+
     Model* model = nullptr;
-private:
-    Material* _material = nullptr;
-    Shader _shaderProgram;
+    Material* material = nullptr;
 };

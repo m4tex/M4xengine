@@ -29,6 +29,13 @@ struct ShaderConfig {
                 "./shaders/standard/basic_unlit_fragment.glsl"
         };
     }
+
+    static ShaderConfig Grid() {
+        return {
+            "./shaders/extra/grid_vertex.glsl",
+            "./shaders/extra/grid_fragment.glsl"
+        };
+    }
 };
 
 class Shader {
@@ -37,8 +44,8 @@ private:
     std::unordered_map<std::string, int> m_UniformLocationCache;
 
 public:
-    Shader();
-    Shader(const ShaderConfig& config);
+//    Shader();
+    explicit Shader(const ShaderConfig& config);
     Shader(const std::string& vsPath, const std::string& fsPath);
     Shader(const std::string& vsPath, const std::string& fsPath, const std::string& gsPath);
     ~Shader();

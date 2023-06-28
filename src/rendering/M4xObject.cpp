@@ -2,36 +2,36 @@
 // Created by m4tex on 5/19/23.
 //
 
-#include "rendering/SolarObject.h"
+#include "rendering/M4xObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <utility>
 #include <vector>
 
-void SolarObject::SetMaterial(Material &newMaterial) {
-
-    _shaderProgram = *new Shader(newMaterial.shaderConfig);
+void M4xObject::SetMaterial(Material &newMaterial) {
+    newMaterial.shader = new Shader(newMaterial.shaderConfig);
+    material = &newMaterial;
 
     if (newMaterial.texture != nullptr)
-        _shaderProgram.SetUniform1i("u_Texture", 0);
+        material->shader->SetUniform1i("u_Texture", 0);
 
-    _material = &newMaterial;
 }
 
-void SolarObject::SetModel(Model& model) {
+void M4xObject::SetModel(Model& model) {
     this->model = &model;
 }
 
-void SolarObject::PrepareDraw(glm::mat4 perspectiveMatrix, glm::mat4 viewMatrix, LightData lightData) {
+void M4xObject::PrepareDraw(glm::mat4 perspectiveMatrix, glm::mat4 viewMatrix, LightData lightData) {
     if(model != nullptr) {
         model->va->Bind();
         model->ib->Bind();
     }
 
-    if (_material != nullptr) {
-        _shaderProgram.Bind();
+    if (material != nullptr) {
+        material->shader->Bind();
 
         glm::mat4 translate = glm::translate(glm::mat4(1.0f), position);
 
@@ -42,34 +42,44 @@ void SolarObject::PrepareDraw(glm::mat4 perspectiveMatrix, glm::mat4 viewMatrix,
 
         glm::mat4 modelMatrix = translate * rotate * scaleMat;
 
-        _shaderProgram.SetUniformMat4f("u_Model", modelMatrix);
-        _shaderProgram.SetUniformMat4f("u_ViewPerspective", perspectiveMatrix * viewMatrix);
+        material->shader->SetUniformMat4f("u_Model", modelMatrix);
+        material->shader->SetUniformMat4f("u_ViewPerspective", perspectiveMatrix * viewMatrix);
 
-        auto color = _material->color;
-        _shaderProgram.SetUniform3f("u_Color", color.x, color.y, color.z);
+        auto color = material->color;
+        material->shader->SetUniform3f("u_Color", color.x, color.y, color.z);
 
-        _shaderProgram.SetUniform1f("u_Shininess", _material->shininess);
+        material->shader->SetUniform1f("u_Shininess", material->shininess);
 
-        _shaderProgram.SetUniform1f("u_Bias", lightData.bias);
+        material->shader->SetUniform1f("u_Bias", lightData.bias);
 
         auto lDir = lightData.lightDir;
-        _shaderProgram.SetUniform3f("u_LightDir", lDir.x, lDir.y, lDir.z);
+        material->shader->SetUniform3f("u_LightDir", lDir.x, lDir.y, lDir.z);
 
         auto amb = lightData.ambient;
-        _shaderProgram.SetUniform3f("u_Ambient", amb.x, amb.y, amb.z);
+        material->shader->SetUniform3f("u_Ambient", amb.x, amb.y, amb.z);
 
-        if (_material->texture != nullptr)
-            _material->texture->Bind(0);
+        if (material->texture != nullptr)
+            material->texture->Bind(0);
     }
 }
 
-SolarObject::SolarObject() : position({ 0.0f, 0.0f, 0.0f }),
-eulerAngles({ 0.0f, 0.0f, 0.0f }), scale({ 1.0f, 1.0f, 1.0f }) {}
+M4xObject::M4xObject(std::string name, glm::vec3 pos, glm::vec3 rot) :  name(std::move(name)),
+                                                                        position(pos),
+                                                                        eulerAngles(rot) {}
 
-SolarObject::SolarObject(Material &material, Model &model) : position({ 0.0f, 0.0f, 0.0f}),
-eulerAngles({ 0.0f, 0.0f, 0.0f }), scale({ 1.0f, 1.0f, 1.0f }) {
+M4xObject::M4xObject() : position(), eulerAngles(), scale(1.0f) {}
+
+M4xObject::M4xObject(Material &material, Model &model) : position(), eulerAngles(), scale(1.0f) {
     SetMaterial(material);
     SetModel(model);
+}
+
+//void M4xObject::Init() {
+//    std::cout << "[Message]: Empty object Init function" << std::endl;
+//}
+
+void M4xObject::Update() {
+    std::cout << "[Message]: Empty object Update function" << std::endl;
 }
 
 void Model::LoadFromFile(const std::string& filepath) {
