@@ -10,6 +10,8 @@ void Renderer::Draw(M4xObject& object) const {
     glDrawElements(GL_TRIANGLES, object.model->ib->GetCount(), GL_UNSIGNED_INT, nullptr);
 }
 
+//#region Grid
+
 #define GRID_SPACING 5
 #define GRID_SIZE (2000 + GRID_SPACING)
 
@@ -70,11 +72,12 @@ void GenGrid() {
     }
 }
 
+//#endregion
 
 void Renderer::DrawScene(std::vector<std::unique_ptr<M4xObject>>& objects) {
     _gridShader.Bind();
     _gridShader.SetUniformMat4f("u_MVP", _camera->PerspectiveMatrix() * _camera->ViewMatrix() * glm::mat4(1.0f));
-    _gridShader.SetUniform3f("u_CamPos", _camera->position.x, _camera->position.y, _camera->position.z);
+    _gridShader.SetUniform3f("u_CamPos", _camera->position->x, _camera->position->y, _camera->position->z);
     _gridModel.va->Bind();
 
     glDisable(GL_DEPTH_TEST);
@@ -82,12 +85,14 @@ void Renderer::DrawScene(std::vector<std::unique_ptr<M4xObject>>& objects) {
     glEnable(GL_DEPTH_TEST);
 
     for (auto& object : objects) {
+        if(object->material == nullptr || object->model == nullptr) continue;
+
         object->PrepareDraw(_camera->PerspectiveMatrix(), _camera->ViewMatrix(), { lightDir, ambient, bias });
         glDrawElements(GL_TRIANGLES, (int)object->model->ib->GetCount(), GL_UNSIGNED_INT, nullptr);
     }
 }
 
-void Renderer::SwitchCamera(Camera& camera) {
+void Renderer::SetCamera(Camera& camera) {
     _camera = &camera;
 }
 
@@ -97,7 +102,7 @@ Renderer::Renderer(Camera& camera) : _camera(&camera), _gridShader(ShaderConfig:
     _gridShader.Bind();
     _gridShader.SetUniform3f("u_Color", 0.25f, 0.25f, 0.25f);
     _gridShader.SetUniformMat4f("u_MVP", _camera->PerspectiveMatrix() * _camera->ViewMatrix() * glm::mat4(1.0f));
-    _gridShader.SetUniform3f("u_CamPos", camera.position.x, camera.position.y, camera.position.z);
+    _gridShader.SetUniform3f("u_CamPos", camera.position->x, camera.position->y, camera.position->z);
 
     _gridModel.vb = std::make_unique<VertexBuffer>(gridVertices, floatCount * sizeof(float));
     VertexBufferLayout layout;
@@ -106,5 +111,5 @@ Renderer::Renderer(Camera& camera) : _camera(&camera), _gridShader(ShaderConfig:
     _gridModel.va = std::make_unique<VertexArray>();
     _gridModel.va->AddBuffer(*_gridModel.vb, layout);
 
-    SwitchCamera(camera);
+    SetCamera(camera);
 }

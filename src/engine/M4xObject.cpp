@@ -2,12 +2,10 @@
 // Created by m4tex on 5/19/23.
 //
 
-#include "rendering/M4xObject.h"
+#include "engine/M4xObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/euler_angles.hpp"
-#include <fstream>
 #include <iostream>
-#include <sstream>
 #include <utility>
 #include <vector>
 
@@ -20,8 +18,8 @@ void M4xObject::SetMaterial(Material &newMaterial) {
 
 }
 
-void M4xObject::SetModel(Model& model) {
-    this->model = &model;
+void M4xObject::SetModel(Model& value) {
+    this->model = &value;
 }
 
 void M4xObject::PrepareDraw(glm::mat4 perspectiveMatrix, glm::mat4 viewMatrix, LightData lightData) {
@@ -78,57 +76,6 @@ M4xObject::M4xObject(Material &material, Model &model) : position(), eulerAngles
 //    std::cout << "[Message]: Empty object Init function" << std::endl;
 //}
 
-void M4xObject::Update() {
+void M4xObject::Update(double deltaTime) {
     std::cout << "[Message]: Empty object Update function" << std::endl;
-}
-
-void Model::LoadFromFile(const std::string& filepath) {
-    std::vector<float> vertices;
-    std::vector<GLuint> indices;
-
-    std::ifstream file(filepath);
-
-    if(file.fail()) std::cout << "[Error]: Failed to load in a model from file." << std::endl;
-
-    std::string line;
-    while (std::getline(file, line)) {
-        if (line[0] == 'v') {
-            std::istringstream s(line.substr(2));
-            float x, y, z;
-
-            s >> x;
-            s >> y;
-            s >> z;
-
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
-        }
-        else if (line[0] == 'f') {
-            std::istringstream s(line.substr(2));
-            unsigned int i, j, k;
-
-            s >> i;
-            s >> j;
-            s >> k;
-
-            indices.push_back(i-1);
-            indices.push_back(j-1);
-            indices.push_back(k-1);
-        }
-    }
-
-    va = std::make_unique<VertexArray>();
-
-    vb = std::make_unique<VertexBuffer>(vertices.data(),
-                                             vertices.size() * sizeof(float));
-
-    ib = std::make_unique<IndexBuffer>(indices.data(), indices.size());
-
-    VertexBufferLayout layout;
-    layout.PushF(3);
-
-    va->AddBuffer(*vb, layout);
-
-    vb->Unbind();
 }

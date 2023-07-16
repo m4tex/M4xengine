@@ -5,7 +5,7 @@
 #pragma once
 
 #include <string>
-#include <rendering/M4xObject.h>
+#include <engine/M4xObject.h>
 
 template<class T>
 class Blueprint {

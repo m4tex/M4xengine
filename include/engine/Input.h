@@ -5,6 +5,7 @@
 #pragma once
 
 #include <GLFW/glfw3.h>
+#include <glm/vec2.hpp>
 #include <iostream>
 #include <unordered_map>
 #include <unordered_set>
@@ -86,6 +87,9 @@
 #define INPUT_HOLDING 1
 #define INPUT_UP_FRAME 2
 
+#define CURSOR_NORMAL GLFW_CURSOR_NORMAL
+#define CURSOR_HIDDEN GLFW_CURSOR_DISABLED
+
 struct KeyTrack {
     bool keyDownFrame;
     bool isDown;
@@ -93,7 +97,6 @@ struct KeyTrack {
 };
 
 class Input {
-
 private:
     static std::unordered_map<int, KeyTrack> m_SubscribedKeysCache;
     static std::unordered_set<int> m_KeyUpdateScheduler;
@@ -106,4 +109,6 @@ public:
 
     static void Update();
     static bool GetInputState(int input, int inputState);
+    static void SetCursorMode(int mode);
+    static glm::vec2 GetMouseDelta();
 };

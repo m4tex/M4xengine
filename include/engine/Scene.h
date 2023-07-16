@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <rendering/M4xObject.h>
+#include <engine/M4xObject.h>
 
 class Scene {
 public:

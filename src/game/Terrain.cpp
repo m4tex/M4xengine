@@ -4,6 +4,6 @@
 
 #include "game/Terrain.h"
 
-void Terrain::Update() {
+void Terrain::Update(double deltaTime) {
     std::cout << "overwritten" << std::endl;
 }

@@ -10,28 +10,27 @@
 #include "IndexBuffer.h"
 #include "Shader.h"
 #include "Debugging.h"
-#include "M4xObject.h"
+#include "engine/M4xObject.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 struct Camera {
-    glm::vec3 position;
-    glm::vec2 eulerAngles; // No rolling eulerAngles
-    float fov, aspect, zNear, zFar;
+    glm::vec3* position;
+    glm::vec2* eulerAngles; // No rolling eulerAngles
+    float fov = 90.0f, aspect = 1.0f, zNear = 0.01f, zFar = 1000.0f;
 
     glm::mat4 PerspectiveMatrix() const {
         return glm::perspective(glm::radians(fov), aspect, zNear, zFar);
     }
 
     glm::mat4 ViewMatrix() const {
-        glm::vec3 rotRad = glm::vec3(glm::radians(eulerAngles.x), glm::radians(eulerAngles.y), 0.0f);
+        glm::vec3 rotRad = glm::vec3(glm::radians(eulerAngles->x), glm::radians(eulerAngles->y), 0.0f);
         glm::vec3 lookingDir = { glm::cos(rotRad.x) * glm::sin(rotRad.y),
                                  glm::sin(rotRad.x),
                                  glm::cos(rotRad.x) * glm::cos(rotRad.y)};
 
-        return glm::lookAt(position, position + lookingDir,glm::vec3(0.0f, 1.0f, 0.0f));
+        return glm::lookAt(*position, *position + lookingDir,glm::vec3(0.0f, 1.0f, 0.0f));
     }
 };
-
 
 class Renderer {
 private:
@@ -48,7 +47,7 @@ public:
 
     explicit Renderer(Camera& camera);
 
-    void SwitchCamera(Camera& camera);
+    void SetCamera(Camera& camera);
     void Draw(M4xObject& object) const;
     void DrawScene(std::vector<std::unique_ptr<M4xObject>>& objects);
 };

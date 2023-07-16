@@ -5,11 +5,10 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include "Shader.h"
-#include "VertexArray.h"
-#include "IndexBuffer.h"
-#include "VertexBufferLayout.h"
-#include "Texture.h"
+#include "rendering/Model.h"
+#include "rendering/Shader.h"
+#include "rendering/Texture.h"
+#include "Collider.h"
 #include <memory>
 
 struct LightData {
@@ -18,19 +17,6 @@ struct LightData {
     float bias;
 };
 
-struct Model {
-    std::unique_ptr<VertexArray> va = nullptr;
-    std::unique_ptr<IndexBuffer> ib = nullptr;
-    std::unique_ptr<VertexBuffer> vb = nullptr;
-
-    Model() = default;
-    
-    explicit Model (const std::string& filepath) {
-        LoadFromFile(filepath);
-    }
-
-    void LoadFromFile(const std::string& filepath);
-};
 
 const ShaderConfig defaultShaderConfig = {
         "../res/shaders/standard/basic_vertex.glsl",
@@ -55,6 +41,9 @@ public:
     glm::vec3 eulerAngles;
     glm::vec3 scale;
 
+    bool gravitates = false;
+    float weight = 1.0f;
+
     M4xObject();
     M4xObject(std::string name, glm::vec3 pos, glm::vec3 rot = { 0, 0, 0 });
     M4xObject(Material& material, Model& model);
@@ -64,8 +53,9 @@ public:
     void PrepareDraw(glm::mat4 perspective, glm::mat4 view, LightData lightData);
 
 //    virtual void Init();
-    virtual void Update();
+    virtual void Update(double deltaTime);
 
+    Collider* collider = nullptr;
     Model* model = nullptr;
     Material* material = nullptr;
 };

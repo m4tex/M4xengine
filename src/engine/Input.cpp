@@ -3,7 +3,6 @@
 //
 
 #include "engine/Input.h"
-#include "imgui/imgui_impl_glfw.h"
 
 GLFWwindow* Input::_window = nullptr;
 std::unordered_map<int, KeyTrack> Input::m_SubscribedKeysCache;
@@ -33,7 +32,7 @@ void Input::KeyInputCallback(GLFWwindow*, int key, int, int action, int) {
 
 void Input::MouseInputCallback(GLFWwindow* window, int button, int action, int mods) {
     //ImGUI Mouse Callback
-    ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+//    ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
 
     if (m_SubscribedKeysCache.find(button) != m_SubscribedKeysCache.end()) {
         switch (action) {
@@ -53,13 +52,24 @@ void Input::MouseInputCallback(GLFWwindow* window, int button, int action, int m
     }
 }
 
+double lastX, lastY;
+double xOffset, yOffset;
+
+void MousePosCallback(GLFWwindow* window, double xPos, double yPos) {
+    xOffset = lastX - xPos;
+    yOffset = lastY - yPos;
+
+    lastX = xPos;
+    lastY = yPos;
+}
+
 void Input::Initialize(GLFWwindow* window) {
     _window = window;
 
     glfwSetKeyCallback(_window, KeyInputCallback);
     glfwSetMouseButtonCallback(_window, MouseInputCallback);
+    glfwSetCursorPosCallback(_window, MousePosCallback);
 }
-
 
 bool Input::GetInputState(int input, int inputState) {
     if (m_SubscribedKeysCache.find(input) != m_SubscribedKeysCache.end()){
@@ -88,4 +98,18 @@ void Input::Update() {
         m_SubscribedKeysCache[key].keyDownFrame = false;
         m_KeyUpdateScheduler.erase(key);
     }
+}
+
+void Input::SetCursorMode(int mode) {
+    glfwSetInputMode(_window, GLFW_CURSOR, mode);
+}
+
+glm::vec2 Input::GetMouseDelta() {
+    auto x = xOffset;
+    auto y = yOffset;
+
+    xOffset = 0;
+    yOffset = 0;
+
+    return { x, y };
 }
