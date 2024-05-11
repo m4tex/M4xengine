@@ -1,4 +1,4 @@
-# Some documentation (I started to get confused myself) UNFNINISHED and dropped for the moment
+# Some documentation (I started to get confused myself) UNFINISHED and dropped for the moment
 ## Index
 + [Rendering](#)
 + [Engine]()
